@@ -1,4 +1,0 @@
-coffee
-coke
-water
-mocha

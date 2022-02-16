@@ -1,72 +1,123 @@
-# def add_drinks(drink):
-#     try:
-#         with open("database/products.txt", "a") as drinks_list:
-#             drinks_list.write(drink)     
-#     except Exception as error1:
-#         print("failed to add drink: ", error1 )
+def menu():
 
-# add_drinks("orange juice\n")
+    main_menu = '''
+    [0] To return to Main Menu
+    [1] To view Menu
+    [2] To add new product
+    [3] To update/replace product 
+    [4] To Delet/Remove product "\n" '''
 
-
-# def drinks_menu():
-#     try:
-#         with open("database/products.txt", "r") as drinks_list:
-#             new_list = drinks_list.readlines()
-#             for item in new_list:
-#                 print(item.replace("\n", ""))
-#     except Exception as error1:
-#         print("failed to read products: ", error1 )
-
-# drinks_menu()
-
-# def delete_item(product):
-#     product = product + "\n"
-#     try:
-#         with open("database/products.txt", "r") as drinks_list:
-#             new_list = drinks_list.readlines()
-#             for item in new_list:
-#                 if item == product:
-#                     new_list.remove(item)
-#                     print(item)
-#         try:
-#             with open("database/products.txt", "w") as list_drinks:
-#                 list_drinks.writelines(new_list)
-#         except Exception as error1:
-#             print("failed to write")
-                            
-#     except Exception as error1:
-#         print("failed to read prodcuts: ", error1 )
-
-# delete_item("apple juice")
-
-# def update_item(drink):
-#     drink = drink + "\n"
-#     try:
-#         with open("database/products.txt", "r") as drinks_list:
-#             new_list = drinks_list.readlines()
-#             for item in new_list:
-#                 if item == drink:
-#                     new_list.update(item)
-#                     print(item)
-#         try:
-#             with open("database/products.txt", "w") as list_drinks:
-#                 list_drinks.writelines(new_list)
-#         except Exception as error1:
-#             print("failed to write")
-                            
-#     except Exception as error1:
-#         print("failed to read prodcut: ", error1 )
-
-# update_item("tea")
+    print(main_menu)
 
 
-# def update_item():
+# add item - working but not for coffee - also first item not showing on line 1 
+def add_item(item):
+    try:
+        with open("database/products.txt", "a", newline="") as product_item:
+            product_item.write(item + "\n")
+    except Exception as error1:
+        print("failed to execute drink", error1)
 
-        
-# elif user_input == 4:
-#         old_drinks = input("which item would you like to update?: ")
-#         new_drinks = input(f"What would like to replace {old_drinks} with?: ")
-#         index_d = drinks_menu.index(old_drinks)
-#         update_drinks(index_d, new_drinks) 
-#     else:
-#         print("Sorry, you are unable to proceed any further")
+# add_item("orange juice")
+
+# view menu - working
+def products_menu():
+    try:
+        with open("database/products.txt", "r") as product_item:
+            product_menu = product_item.readlines()
+            item_num = 1
+            for products in product_menu:
+                print(f"{item_num}.", products.replace("\n", ""))
+                item_num += 1
+    except Exception as error1:
+        print("failed to execute drink", error1)
+
+# products_menu()
+
+
+# update/replace with new product - working
+def update_item(old_item, new_item):
+    old_item = old_item + "\n"
+    try:
+        with open("database/products.txt", "r") as product_item:
+            product_menu = product_item.readlines()
+            for products in product_menu:
+                if products == old_item:
+                    item_num = product_menu.index(products)
+                    product_menu[item_num] = new_item + "\n"
+                    try:
+                        with open("database/products.txt", "w") as product_item:
+                            product_item.writelines(product_menu)
+                            product_menu
+                    except Exception as error1:
+                        print("failed to write to the file:", error1)
+                    else: 
+                        original_item = old_item.replace("\n", "") 
+                        new_item.replace("\n", "")
+                        print(f'{original_item} has now been updated to {new_item}')
+    except Exception as error1:
+        print("failed to execute drink", error1)
+
+# old_item = "water"
+# new_item = "tea"
+# update_item(old_item, new_item)
+
+# delete item - working
+def delete_item(old_item):
+    old_item = old_item + "\n"
+    try:
+        with open("database/products.txt", "r") as product_item:
+            product_menu = product_item.readlines()
+            for products in product_menu:
+                if products == old_item:
+                    item_num = product_menu.index(products)
+                    del product_menu[item_num]
+                    try:
+                        with open("database/products.txt", "w") as product_item:
+                            product_item.writelines(product_menu)
+                            product_menu
+                    except Exception as error1:
+                        print("failed to write to the file", error1)
+    except Exception as error1:
+        print("failed to execute drink", error1)
+
+# delete_item("tea")
+
+def get_product_name(product_id):
+    product_name = " "
+    try:
+        with open("database/products.txt", "r") as product_item:
+            product_menu = product_item.readlines()
+            item_num = 1
+            for products in product_menu:
+                if item_num == product_id:
+                    product_name = products.replace("\n", "")
+                # print(f"{item_num}.", products.replace("\n", ""))
+                item_num += 1
+    except Exception as error1:
+        print("failed to execute drink", error1)
+    return product_name
+
+# print(get_product_name(3))
+
+
+
+
+############################################################################################################
+
+
+# def start_A_cafe_app(user_input):
+#     if user_input == 0:
+#         print("Please return to main menu")
+#     elif user_input == 1:
+#         item_num = 1
+#         print("\n***********************Drinks********************************\n")
+#         for item in products_menu:
+#             print(f"{item_num}. {item}")
+#             item_num += 1
+#         print("\n*******************************************************\n")
+
+
+# print(main_menu)
+# start_program = int(input("welcome to A_cafe. Please select from the menu what you would like to do : "))
+# start_A_cafe_app(start_program)
