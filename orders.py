@@ -11,7 +11,7 @@ def menu():
   [0] To return to main menu
   [1] To view order
   [2] To add to order
-  [3] To update ordaer status
+  [3] To update order status
   [4] To update an existing order
   [5] To Delete an order  "\n" '''
   

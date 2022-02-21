@@ -1,3 +1,7 @@
+import csv
+from pprint import pp
+
+
 def menu():
 
     main_menu = '''
@@ -11,88 +15,83 @@ def menu():
 
 
 # add item - working but not for coffee - also first item not showing on line 1 
-def add_item(item):
+def add_item(name, price):
+    new_item = [name, price]
     try:
-        with open("database/products.txt", "a", newline="") as product_item:
-            product_item.write(item + "\n")
+          with open('database/products.csv', 'a', newline='') as file:
+            write = csv.writer(file) 
+            write.writerow(new_item)
     except Exception as error1:
         print("failed to execute drink", error1)
 
-# add_item("orange juice")
+# add_item("coke", 1.00)
 
 # view menu - working
 def products_menu():
     try:
-        with open("database/products.txt", "r") as product_item:
-            product_menu = product_item.readlines()
+        with open("database/products.csv", "r") as file:
+            reader = csv.DictReader(file)
             item_num = 1
-            for products in product_menu:
-                print(f"{item_num}.", products.replace("\n", ""))
+            for product in reader:
+                # print(product)
+                print(f"{item_num}.", product.get('name'), f"£{product.get('price')}")
                 item_num += 1
     except Exception as error1:
         print("failed to execute drink", error1)
 
 # products_menu()
 
+def update_item(name, price, product_index):
+    item_num = 1
+    products = []
+    with open('database/products.csv', 'r') as file:
+      reader = csv.DictReader(file)
+      for row in reader:
+          if item_num == product_index:
+              row.update({'name': name,'price': price})
+        #     row[0] = name # putting all the items i.e product, customer name etc on the same row
+        #     row[1] = price
+          products.append(row)
+          item_num += 1   
+    #   pp(products)
 
-# update/replace with new product - working
-def update_item(old_item, new_item):
-    old_item = old_item + "\n"
-    try:
-        with open("database/products.txt", "r") as product_item:
-            product_menu = product_item.readlines()
-            for products in product_menu:
-                if products == old_item:
-                    item_num = product_menu.index(products)
-                    product_menu[item_num] = new_item + "\n"
-                    try:
-                        with open("database/products.txt", "w") as product_item:
-                            product_item.writelines(product_menu)
-                            product_menu
-                    except Exception as error1:
-                        print("failed to write to the file:", error1)
-                    else: 
-                        original_item = old_item.replace("\n", "") 
-                        new_item.replace("\n", "")
-                        print(f'{original_item} has now been updated to {new_item}')
-    except Exception as error1:
-        print("failed to execute drink", error1)
+    fieldnames = ['name', 'price']
+    with open('database/products.csv', 'w', newline="") as file:
+      write = csv.DictWriter(file, fieldnames=fieldnames)
+      write.writeheader()
+      write.writerows(products)
 
-# old_item = "water"
-# new_item = "tea"
-# update_item(old_item, new_item)
+# update_item('tropical juice', 4.50, 3)
 
-# delete item - working
-def delete_item(old_item):
-    old_item = old_item + "\n"
-    try:
-        with open("database/products.txt", "r") as product_item:
-            product_menu = product_item.readlines()
-            for products in product_menu:
-                if products == old_item:
-                    item_num = product_menu.index(products)
-                    del product_menu[item_num]
-                    try:
-                        with open("database/products.txt", "w") as product_item:
-                            product_item.writelines(product_menu)
-                            product_menu
-                    except Exception as error1:
-                        print("failed to write to the file", error1)
-    except Exception as error1:
-        print("failed to execute drink", error1)
+def delete_item(product_index):
+    item_num = 1
+    products = []
+    with open('database/products.csv', 'r') as file:
+      reader = csv.DictReader(file)
+      for row in reader: 
+          products.append(row)
+          item_num += 1 
+      del products[product_index-1] 
+    #   pp(products)
 
-# delete_item("tea")
+    heading = ['name', 'price']
+    with open('database/products.csv', 'w', newline="") as file:
+      write = csv.DictWriter(file, fieldnames=heading)
+      write.writeheader()
+      write.writerows(products)
 
-def get_product_name(product_id):
+# delete_item(3)
+
+def get_product_name(product_index): #puts in order.py product = products.get_product_name(product)
     product_name = " "
     try:
-        with open("database/products.txt", "r") as product_item:
-            product_menu = product_item.readlines()
+        with open("database/products.csv", "r") as file:
+            reader = csv.DictReader(file)
             item_num = 1
-            for products in product_menu:
-                if item_num == product_id:
-                    product_name = products.replace("\n", "")
-                # print(f"{item_num}.", products.replace("\n", ""))
+            for product in reader:
+                if item_num == product_index:
+                # print(product)
+                 product_name = product.get('name')
                 item_num += 1
     except Exception as error1:
         print("failed to execute drink", error1)
@@ -102,22 +101,21 @@ def get_product_name(product_id):
 
 
 
+# def update_status(order_status, product_index):
+#     item_num = 1
+#     products = []
+#     with open('database/products.csv', 'r') as file:
+#       reader = csv.DictReader(file)
+#       for row in reader:    
+#           if item_num == product_index:
+#             row[5] = order_status
+#           products.append(row)
+#           item_num += 1
 
-############################################################################################################
+#     fieldnames = ['order_status', 'product_index']
+#     with open('database/products.csv', 'w', newline="") as file:
+#       write = csv.DictWriter(file, fieldnames=fieldnames)
+#       write.writeheader()
+#       write.writerows(products)
 
-
-# def start_A_cafe_app(user_input):
-#     if user_input == 0:
-#         print("Please return to main menu")
-#     elif user_input == 1:
-#         item_num = 1
-#         print("\n***********************Drinks********************************\n")
-#         for item in products_menu:
-#             print(f"{item_num}. {item}")
-#             item_num += 1
-#         print("\n*******************************************************\n")
-
-
-# print(main_menu)
-# start_program = int(input("welcome to A_cafe. Please select from the menu what you would like to do : "))
-# start_A_cafe_app(start_program)
+# update_status("on its way", 1)
