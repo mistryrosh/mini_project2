@@ -1,6 +1,5 @@
-import csv
-from pprint import pp
-
+import db_connection as db
+# from APP_FILES.products import get_product_name
 
 def menu():
 
@@ -9,113 +8,63 @@ def menu():
     [1] To view Menu
     [2] To add new product
     [3] To update/replace product 
-    [4] To Delet/Remove product "\n" '''
+    [4] To Delete/Remove product "\n" '''
 
     print(main_menu)
 
-
-# add item - working but not for coffee - also first item not showing on line 1 
+#add to products table
 def add_item(name, price):
-    new_item = [name, price]
     try:
-          with open('database/products.csv', 'a', newline='') as file:
-            write = csv.writer(file) 
-            write.writerow(new_item)
-    except Exception as error1:
-        print("failed to execute drink", error1)
+        with db.connection.cursor() as cursor:
+            sql = "INSERT INTO products_table (product_name, product_price) VALUES (%s, %s)"
+            val = (name, price)
+            cursor.execute(sql,val)
+    except Exception as e:         
+        print('------------ FAILED TO ADD PRODUCT: ===>', e)        
+    else:
+        print(f'\n********************* PRODUCT HAS SUCCESSFULLY BEEN ADDED *********************\n') 
+        db.connection.commit()
 
-# add_item("coke", 1.00)
 
-# view menu - working
 def products_menu():
     try:
-        with open("database/products.csv", "r") as file:
-            reader = csv.DictReader(file)
-            item_num = 1
-            for product in reader:
-                # print(product)
-                print(f"{item_num}.", product.get('name'), f"£{product.get('price')}")
-                item_num += 1
-    except Exception as error1:
-        print("failed to execute drink", error1)
+        with db.connection.cursor() as cursor:
+            sql = "SELECT * FROM products_table"
+            cursor.execute(sql)
+    except Exception as e:         
+        print('------------ FAILED TO FETCH RECORDS: ===>', e)
+    else:
+        # Gets all records from the database
+        fetched_rows = cursor.fetchall()
 
-# products_menu()
+        # iterate through the fetched records(rows) and display them
+        for fetch_row in fetched_rows:
+            print(fetch_row[0], fetch_row[1], fetch_row[2])
 
-def update_item(name, price, product_index):
-    item_num = 1
-    products = []
-    with open('database/products.csv', 'r') as file:
-      reader = csv.DictReader(file)
-      for row in reader:
-          if item_num == product_index:
-              row.update({'name': name,'price': price})
-        #     row[0] = name # putting all the items i.e product, customer name etc on the same row
-        #     row[1] = price
-          products.append(row)
-          item_num += 1   
-    #   pp(products)
 
-    fieldnames = ['name', 'price']
-    with open('database/products.csv', 'w', newline="") as file:
-      write = csv.DictWriter(file, fieldnames=fieldnames)
-      write.writeheader()
-      write.writerows(products)
+def update_item(product_name, product_price, product_index):
+    try:
+        with db.connection.cursor() as cursor:
+            sql = '''UPDATE products_table
+            SET product_name = %s, product_price = %s
+            WHERE product_id = %s'''
+            val = (product_name, product_price, product_index)
+            cursor.execute(sql,val)
+    except Exception as e:         
+        print('------------ FAILED TO ADD PRODUCT: ===>', e)        
+    else:
+        print(f'\n********************* PRODUCT HAS SUCCESSFULLY BEEN UPDATED *********************\n') 
+        db.connection.commit()
 
-# update_item('tropical juice', 4.50, 3)
 
 def delete_item(product_index):
-    item_num = 1
-    products = []
-    with open('database/products.csv', 'r') as file:
-      reader = csv.DictReader(file)
-      for row in reader: 
-          products.append(row)
-          item_num += 1 
-      del products[product_index-1] 
-    #   pp(products)
-
-    heading = ['name', 'price']
-    with open('database/products.csv', 'w', newline="") as file:
-      write = csv.DictWriter(file, fieldnames=heading)
-      write.writeheader()
-      write.writerows(products)
-
-# delete_item(3)
-
-def get_product_name(product_index): #puts in order.py product = products.get_product_name(product)
-    product_name = " "
     try:
-        with open("database/products.csv", "r") as file:
-            reader = csv.DictReader(file)
-            item_num = 1
-            for product in reader:
-                if item_num == product_index:
-                # print(product)
-                 product_name = product.get('name')
-                item_num += 1
-    except Exception as error1:
-        print("failed to execute drink", error1)
-    return product_name
-
-# print(get_product_name(3))
-
-
-
-# def update_status(order_status, product_index):
-#     item_num = 1
-#     products = []
-#     with open('database/products.csv', 'r') as file:
-#       reader = csv.DictReader(file)
-#       for row in reader:    
-#           if item_num == product_index:
-#             row[5] = order_status
-#           products.append(row)
-#           item_num += 1
-
-#     fieldnames = ['order_status', 'product_index']
-#     with open('database/products.csv', 'w', newline="") as file:
-#       write = csv.DictWriter(file, fieldnames=fieldnames)
-#       write.writeheader()
-#       write.writerows(products)
-
-# update_status("on its way", 1)
+        with db.connection.cursor() as cursor:
+            sql = "DELETE FROM products_table WHERE product_id = %s"
+            val = (product_index,)
+            cursor.execute(sql,val)
+    except Exception as e:         
+        print('------------ FAILED TO ADD PRODUCT: ===>', e)        
+    else:
+        print(f'\n********************* PRODUCT HAS SUCCESSFULLY BEEN DELETED *********************\n') 
+        db.connection.commit()

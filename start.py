@@ -16,7 +16,7 @@ def run_app():
         main_menu()
         user_input = int(input('welcome to A_cafe. Please choose an option to proceed: '))
         if(user_input == 0):
-            print('You have successfully exited the app: ')
+            print('\n********************* You have successfully exited the app *********************\n')
             break
         elif user_input == 1: #this is for products
             while True:
@@ -24,15 +24,16 @@ def run_app():
                 customer_input = int(input('What would you like to do?: '))
                 if customer_input == 0: #return to main menu
                     print()
-                    print('You have returned to main menu: ')
+                    print('\n********************* You have successfully returned to main menu *********************\n')
                     break
                 elif customer_input == 1: #view product
+                    print()
                     products.products_menu()
                 elif customer_input == 2: #add item
                     product_name = input('Enter new prodct?: ') #capture customer input
-                    product_price = input('Enter item price: ')
+                    product_price = float(input('Enter item price: '))
                     products.add_item(product_name, product_price) #pass the input variable(customer_input) as an argument
-                    products.products_menu() #call menu with new item
+                    # products.products_menu() #call menu with new item
                 elif customer_input == 3: #update item
                     print()
                     products.products_menu()
@@ -44,7 +45,9 @@ def run_app():
                     products.update_item(update_product, new_price, product_index)
                     products.products_menu()
                 elif customer_input == 4: #delete item
+                    print()
                     products.products_menu()
+                    print()
                     delete_item = int(input('what item would you like to delete?: '))
                     products.delete_item(delete_item)
                     products.products_menu()
@@ -55,16 +58,16 @@ def run_app():
                 couriers.menu()
                 customer_input = int(input('Welcome to A_cafe. Please choose an option to proceed: '))
                 if customer_input == 0: #return to main menu
-                    print('You have returned to main menu: ')
+                    print('\n********************* You have successfully returned to main menu *********************\n')
                     break
                 elif customer_input == 1: #view couriers
+                    print()
                     couriers.view_courier()
                 elif customer_input == 2: #add new courier
-                    couriers.view_courier()
                     new_courier = input('Enter the name of the new courier?: ') #capture customer input
                     courier_phone_num = input('Enter courier phone number: ')
-                    couriers.add_courier(new_courier, courier_phone_num) #pass the input variable(customer_input) as an argument
-                    couriers.view_courier() #call menu with new item
+                    print()
+                    couriers.add_courier(new_courier, courier_phone_num) #pass the input variable(customer_input) as an argument            
                 elif customer_input == 3: #update courier
                     print()
                     couriers.view_courier()
@@ -76,8 +79,11 @@ def run_app():
                     couriers.update_courier(new_courier, phone_num, courier_index)
                     couriers.view_courier()
                 elif customer_input == 4:
+                    print()
                     couriers.view_courier()
+                    print()
                     delete_courier = int(input('Which courier would you like to delete?: '))
+                    print()
                     couriers.delete_courier(delete_courier)
                     couriers.view_courier()
 
@@ -87,13 +93,15 @@ def run_app():
                 orders.menu()
                 customer_input = int(input('Welcome to A_cafe. Please choose an option to proceed?: '))
                 if customer_input == 0:
-                    print('You have returned to main menu: ')
+                    print('\n********************* You have successfully returned to main menu *********************\n')
                     break
                 elif customer_input == 1:
                     orders.view_order()
                 elif customer_input == 2: #add to order
+                    print()
                     products.products_menu()
-                    pick_product = int(input('What item would you like to add?: '))
+                    print()
+                    pick_product = input('What item would you like to add?: ')
                     customer_name = input('Please enter your full name: ') #capture customer input
                     customer_address = input('Please enter your address: ')
                     customer_phone_num = input('Please enter your phone number: ')
